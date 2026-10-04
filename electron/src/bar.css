@@ -1,0 +1,30 @@
+:root {
+  --bg: #f6f8fc; --fg: #1f1f1f; --muted: #5f6368; --hover: rgba(0,0,0,.06);
+  --selected: #d3e3fd; --border: #e0e3e7; --badge: #d93025;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1f1f1f; --fg: #e8eaed; --muted: #9aa0a6; --hover: rgba(255,255,255,.08);
+    --selected: #004a77; --border: #3c4043;
+  }
+}
+html, body { margin: 0; height: 44px; overflow: hidden; background: var(--bg); color: var(--fg);
+  font: 13px -apple-system, BlinkMacSystemFont, sans-serif; user-select: none; }
+#bar { height: 44px; box-sizing: border-box; display: flex; align-items: center; gap: 4px;
+  padding: 0 10px 0 84px; border-bottom: 1px solid var(--border); -webkit-app-region: drag; }
+#tabs { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; min-width: 0; }
+#tabs::-webkit-scrollbar { display: none; }
+.spacer { flex: 1; }
+button, .tab { -webkit-app-region: no-drag; }
+.tab { display: flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 8px;
+  cursor: default; white-space: nowrap; flex: none; }
+.tab:hover { background: var(--hover); }
+.tab.selected { background: var(--selected); }
+.tab .name { max-width: 200px; overflow: hidden; text-overflow: ellipsis; }
+.tab .count { background: var(--badge); color: #fff; font-size: 11px; font-weight: 600;
+  padding: 1px 6px; border-radius: 9px; font-variant-numeric: tabular-nums; }
+.tab input { font: inherit; width: 160px; }
+button { border: 0; background: transparent; color: var(--fg); font: inherit; padding: 5px 9px;
+  border-radius: 8px; }
+button:hover { background: var(--hover); }
+#add { font-size: 16px; color: var(--muted); }
