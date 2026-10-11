@@ -1,118 +1,75 @@
-# Gmail Desktop
+# Gmail Desktop for macOS
 
-A Mac app that wraps mail.google.com, with one isolated session per Google account.
+An independent Mac app for using Gmail with separate sessions for multiple Google accounts. It displays the real Gmail website and adds an account switcher, Dock unread badge, notifications, keyboard shortcuts, `mailto:` support, and attachment handling.
 
-There are two versions in this folder:
+**This is an independent project, not an official Google app.** Google can change Gmail or its sign-in rules at any time. Some accounts may be unable to sign in from an embedded browser.
 
-- **`electron/` (main, Chrome engine).** Same engine as Chrome, so Gmail feels as smooth
-  as in the browser. About 500 MB on disk (it runs on both Apple silicon and Intel).
-- **`Sources/` (lightweight, Safari engine).** Native SwiftUI + WKWebView, about 1 MB.
-  Gmail feels slightly less smooth than in Chrome.
+[Инструкция на русском ↓](#установка-по-русски)
 
-## Chrome-engine version (electron/)
+## Download and install
 
-```sh
-cd ~/Desktop/GmailDesktop/electron
-npm install                   # once
-npm start                     # run from source
-npm run build                 # build the app and Gmail Desktop (Chrome).zip
-npm run build -- --install    # also install as /Applications/Gmail Desktop (Chrome).app
-```
+Requirements: a Mac with **macOS 14 Sonoma or newer** (Apple silicon or Intel).
 
-The app is built in `~/Library/Caches/gmail-desktop-build` (the iCloud Desktop adds file
-attributes that break code signing) and zipped to `~/Desktop/GmailDesktop/Gmail Desktop (Chrome).zip`.
+1. Open this repository's **Releases** page (link on the right side of the page) and download `Gmail Desktop.zip` from the latest release.
+2. Double-click the ZIP. Drag `Gmail Desktop.app` into your **Applications** folder.
+3. Open **Gmail Desktop** from Applications.
+4. The first time, macOS will probably say it can't verify the app. This is expected: the app is free and not registered with Apple. Click **Done** (not "Move to Trash").
+5. Open **System Settings → Privacy & Security**, scroll down to the message about "Gmail Desktop", click **Open Anyway**, and confirm with your Mac password or Touch ID.
+6. Sign in on Google's page. From then on the app opens normally.
 
-Its features match the list below, plus a right-click menu with spelling suggestions.
-Settings live in **Gmail Desktop → Settings** in the menu bar.
+Only do steps 4–5 for a ZIP you downloaded from this project's Releases page.
 
-Security (in addition to the points below):
-- every page runs in Chromium's sandbox with context isolation and no Node.js access;
-- Gmail may only use notifications, clipboard copy and full screen; camera, microphone,
-  location and devices are always denied, and other sites get no permissions;
-- cookies are encrypted with a key kept in your macOS Keychain ("Gmail Desktop Safe Storage");
-- Electron's debug and "run as Node" switches are turned off in the binary (fuses), and the
-  app refuses to load modified code (asar integrity);
-- the only script added to Gmail forwards notification titles to macOS. It doesn't read
-  the page or forms, and the app accepts it only from mail.google.com.
-- Data lives in `~/Library/Application Support/Gmail Desktop/`.
+If the Releases page is empty, there is no downloadable version yet.
 
-After a rebuild macOS may ask once to let the app use its Keychain item; choose Always Allow.
+## What it does
 
-## Safari-engine version (Sources/)
+- Separate local web sessions for each account, with an account switcher and unread counts.
+- Dock badge and macOS notifications; Gmail's own notification setting controls detailed banners.
+- `mailto:` links, optional compose window, file attachments and downloads to `~/Downloads`.
+- Keyboard shortcuts for composing, switching accounts, reloading and navigating Gmail.
 
-### Build and run
+## Privacy and security
 
-Requirements: macOS 14 or newer, Xcode (or the Swift toolchain).
+- The app runs inside the macOS App Sandbox and uses Apple's WebKit (the engine behind Safari).
+- Each account has its own separate storage; signing out of an account in the app deletes its cookies and cache.
+- The app only shows Google's own pages. Your password is entered only on Google's sign-in page.
+- Besides the Gmail website itself, the app's only network request is Gmail's unread-count feed, sent to Google for accounts that are not currently open.
+- No analytics, no tracking, no servers of its own.
+
+## Build from source
+
+Requirements: macOS 14+, Xcode or the Xcode Command Line Tools.
 
 ```sh
-cd ~/Desktop/GmailDesktop
-./build-app.sh            # builds build/Gmail Desktop.app and Gmail Desktop.zip
+git clone <repository-url>
+cd GmailDesktop
+./build-app.sh
 open "build/Gmail Desktop.app"
-./build-app.sh --install  # also copies it to /Applications
 ```
 
-`swift build` alone compiles the code, but notifications, the `mailto:` handler and the
-sandbox need the `.app` bundle that `build-app.sh` assembles. To work in Xcode, open
-`Package.swift`.
+This also creates `Gmail Desktop.zip`. `./build-app.sh --install` replaces `/Applications/Gmail Desktop.app`. `swift build` alone does not assemble the `.app` bundle needed for notifications, `mailto:` and sandbox entitlements.
 
-## Features
+Releases are built automatically by GitHub Actions when a version tag such as `v1.0.0` is pushed (it must match `CFBundleShortVersionString` in `Resources/Info.plist`).
 
-- **Accounts:** the avatar button at the top right opens a Gmail-style account switcher
-  with unread counts, *Add another account* (⇧⌘N), rename, sign out and remove. A red dot
-  on the avatar means new mail in another account. There is no limit on the number of
-  accounts. ⌘1…⌘9 select the first nine, ⌃Tab / ⌃⇧Tab cycle through all, and every
-  account is also in the **Accounts** menu. The last selected account is remembered.
-- **One Google account per app account:** *Sign Out* clears only that account's cookies and data and shows
-  Google's sign-in page, so other accounts stay signed in. Google's "Add another account"
-  adds a new app account instead of a second account in the same session, and switching to a
-  second account inside one app account (`/mail/u/1`) is refused.
-- **Separate sessions:** each account has its own `WKWebsiteDataStore(forIdentifier:)`,
-  so cookies and storage never mix. Removing an account deletes its store.
-- **Memory:** only the 3 most recently used accounts keep Gmail loaded. The others are
-  unloaded and checked for new mail once a minute via Gmail's Atom feed
-  (`https://mail.google.com/mail/u/0/feed/atom`), so badges and notifications keep
-  working. Switching to an unloaded account takes a second or two while Gmail opens.
-- **Dock badge:** total unread across all accounts, from Gmail's page title (loaded
-  accounts) or the Atom feed (unloaded ones).
-- **Notifications:** turn on *Gmail → Settings → General → Desktop notifications* in each
-  account for sender/subject banners. If that's off, the app still notifies when an
-  account's unread count goes up.
-- **mailto:** Settings (⌘,) → *Make Gmail Desktop the Default Email App*. Links open a
-  pre-filled Gmail compose for the selected account.
-- **Compose:** ⌘N opens Gmail compose in its own window (switch it off in Settings to
-  compose in the main window).
-- **Attachments:** upload with the file picker or by dragging files into a message;
-  downloads go to ~/Downloads.
-- **Links:** links in emails open in your default browser, or in Chrome if you turn that on in Settings; Google sign-in stays in the app.
-- ⌘R reload, ⌘[ / ⌘] back/forward, ⇧⌘I inbox.
+The `electron/` folder contains an experimental Chromium-based alternative. It is not part of the releases; see `electron/package.json` for its scripts.
 
-## Security and privacy
+## Установка по-русски
 
-- Apart from WebKit, the app makes one kind of request itself: the unread-count check for
-  unloaded accounts. It goes only to `https://mail.google.com`, carries only that account's
-  mail.google.com cookies (the ones WebKit already sends), never follows redirects and
-  caches nothing. Clicked links leave for your default browser.
-- The only injected script replaces the web Notification API. It does not read pages or
-  form fields, and the app accepts its messages only from `https://mail.google.com`.
-- Nothing is logged. Passwords are typed into Google's own page and never pass through
-  the app's code.
-- The app runs in the macOS App Sandbox (network client, user-selected files read-only,
-  Downloads). Sessions are stored in
-  `~/Library/Containers/com.ivanzakharov.GmailDesktop/Data/Library/WebKit/`, readable only
-  by your macOS user, and encrypted at rest when FileVault is on.
-- Web Inspector is disabled and Safari's fraudulent-website warning is on.
+Нужен Mac с **macOS 14 Sonoma или новее** (любой: Apple silicon или Intel).
 
-## Known limitations
+1. Откройте страницу **Releases** этого репозитория (ссылка справа на странице) и скачайте `Gmail Desktop.zip` из последней версии.
+2. Дважды щёлкните по ZIP-файлу и перетащите `Gmail Desktop.app` в папку **Программы** (Applications).
+3. Откройте **Gmail Desktop** из папки «Программы».
+4. В первый раз macOS скорее всего скажет, что не может проверить приложение. Это нормально: приложение бесплатное и не зарегистрировано в Apple. Нажмите **Готово** (не «Переместить в Корзину»).
+5. Откройте **Системные настройки → Конфиденциальность и безопасность**, прокрутите вниз до сообщения про «Gmail Desktop», нажмите **Всё равно открыть** и подтвердите паролем от Mac или Touch ID.
+6. Войдите в аккаунт Google на странице Google. Дальше приложение будет открываться как обычно.
 
-- **Passwords AutoFill:** macOS only offers Passwords/iCloud Keychain AutoFill inside
-  Safari and apps that own the website's domain, so it does not appear in this app.
-  Copy the password from the Passwords app (or use Google's phone prompt) once per account;
-  the session then stays signed in.
-- **Passkeys** in WKWebView are limited for non-browser apps; use password + 2-step
-  verification or the phone prompt.
-- Google may block sign-in in embedded web views. The app sends a Safari user agent to
-  avoid this; if Google still says the browser isn't secure, report it.
-- Each loaded account is a full Gmail page (roughly 0.5–1.5 GB of memory). The Atom feed
-  counts unread mail in the Inbox only.
-- The app is signed ad hoc (no Developer ID), so it runs on this Mac but would need
-  proper signing to share.
+Делайте шаги 4–5 только для файла, скачанного со страницы Releases этого проекта.
+
+## Author
+
+Made by **Ivan Zakharov** · [LinkedIn](https://www.linkedin.com/in/ivan-zakharov-craftio-design/)
+
+## License
+
+The source code is available under the [MIT License](LICENSE). Google and Gmail are trademarks of Google LLC; this project is not affiliated with or endorsed by Google.

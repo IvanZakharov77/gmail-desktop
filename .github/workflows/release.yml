@@ -1,0 +1,30 @@
+name: Mac release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check release version
+        run: |
+          version="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' Resources/Info.plist)"
+          test "v$version" = "$GITHUB_REF_NAME"
+      - name: Build universal macOS app
+        run: ./build-app.sh
+      - name: Verify app and archive
+        run: |
+          codesign --verify --deep --strict 'build/Gmail Desktop.app'
+          lipo -archs 'build/Gmail Desktop.app/Contents/MacOS/GmailDesktop'
+          unzip -tqq 'Gmail Desktop.zip'
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" 'Gmail Desktop.zip' --generate-notes

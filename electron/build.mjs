@@ -14,7 +14,7 @@ const [outDir] = await packager({
   executableName: 'Gmail Desktop',
   appBundleId: 'com.ivanzakharov.gmail-desktop',
   appCategoryType: 'public.app-category.productivity',
-  appVersion: '2.0.0',
+  appVersion: JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8')).version,
   icon: path.join(root, '..', 'Resources', 'AppIcon.icns'),
   platform: 'darwin',
   arch: 'universal',
@@ -29,6 +29,15 @@ const [outDir] = await packager({
 });
 
 const app = path.join(outDir, 'Gmail Desktop.app');
+// Packager can retain Electron's default icon on some macOS/packager versions.
+// Set our icon explicitly before signing the bundle.
+fs.copyFileSync(
+  path.join(root, '..', 'Resources', 'AppIcon.icns'),
+  path.join(app, 'Contents', 'Resources', 'AppIcon.icns'),
+);
+execFileSync('/usr/libexec/PlistBuddy', [
+  '-c', 'Set :CFBundleIconFile AppIcon', path.join(app, 'Contents', 'Info.plist'),
+]);
 await flipFuses(path.join(app, 'Contents', 'MacOS', 'Gmail Desktop'), {
   version: FuseVersion.V1,
   [FuseV1Options.RunAsNode]: false,
