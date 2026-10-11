@@ -17,7 +17,7 @@ Requirements: a Mac with **macOS 14 Sonoma or newer** (Apple silicon or Intel).
 >
 > The full source code is public in this repository, and every release is built automatically by GitHub from that code. You only need to allow the app once (steps 4–5 below).
 
-1. Open this repository's **Releases** page (link on the right side of the page) and download `Gmail Desktop.zip` from the latest release.
+1. Open this repository's **Releases** page (link on the right side of the page) and download `Gmail.Desktop.zip` from the latest release.
 2. Double-click the ZIP. Drag `Gmail Desktop.app` into your **Applications** folder.
 3. Open **Gmail Desktop** from Applications.
 4. The first time, macOS will probably say it can't verify the app. This is expected: the app is free and not registered with Apple. Click **Done** (not "Move to Trash").
@@ -48,8 +48,8 @@ If the Releases page is empty, there is no downloadable version yet.
 Requirements: macOS 14+, Xcode or the Xcode Command Line Tools.
 
 ```sh
-git clone <repository-url>
-cd GmailDesktop
+git clone https://github.com/IvanZakharov77/gmail-desktop.git
+cd gmail-desktop
 ./build-app.sh
 open "build/Gmail Desktop.app"
 ```
@@ -71,7 +71,7 @@ The `electron/` folder contains an experimental Chromium-based alternative. It i
 >
 > Весь исходный код открыт в этом репозитории, а каждую версию автоматически собирает GitHub из этого кода. Разрешить запуск нужно один раз (шаги 4–5 ниже).
 
-1. Откройте страницу **Releases** этого репозитория (ссылка справа на странице) и скачайте `Gmail Desktop.zip` из последней версии.
+1. Откройте страницу **Releases** этого репозитория (ссылка справа на странице) и скачайте `Gmail.Desktop.zip` из последней версии.
 2. Дважды щёлкните по ZIP-файлу и перетащите `Gmail Desktop.app` в папку **Программы** (Applications).
 3. Откройте **Gmail Desktop** из папки «Программы».
 4. В первый раз macOS скорее всего скажет, что не может проверить приложение. Это нормально: приложение бесплатное и не зарегистрировано в Apple. Нажмите **Готово** (не «Переместить в Корзину»).
