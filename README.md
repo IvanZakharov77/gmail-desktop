@@ -10,6 +10,13 @@ An independent Mac app for using Gmail with separate sessions for multiple Googl
 
 Requirements: a Mac with **macOS 14 Sonoma or newer** (Apple silicon or Intel).
 
+> [!IMPORTANT]
+> **macOS will warn you the first time you open the app. This is expected.**
+>
+> Apple only lets apps open without a warning if the developer pays for an Apple Developer account ($99/year) and sends each version to Apple for an automated check ("notarization"). Gmail Desktop is a free hobby project, so it isn't registered with Apple. macOS therefore says it "can't verify" the app. That does **not** mean a virus was found; macOS simply has no information about the app.
+>
+> The full source code is public in this repository, and every release is built automatically by GitHub from that code. You only need to allow the app once (steps 4–5 below).
+
 1. Open this repository's **Releases** page (link on the right side of the page) and download `Gmail Desktop.zip` from the latest release.
 2. Double-click the ZIP. Drag `Gmail Desktop.app` into your **Applications** folder.
 3. Open **Gmail Desktop** from Applications.
@@ -56,6 +63,13 @@ The `electron/` folder contains an experimental Chromium-based alternative. It i
 ## Установка по-русски
 
 Нужен Mac с **macOS 14 Sonoma или новее** (любой: Apple silicon или Intel).
+
+> [!IMPORTANT]
+> **При первом запуске macOS покажет предупреждение. Это нормально.**
+>
+> Apple пропускает приложения без предупреждения, только если разработчик платит за аккаунт Apple Developer ($99 в год) и отправляет каждую версию на автоматическую проверку («нотаризацию»). Gmail Desktop — бесплатный некоммерческий проект и не зарегистрирован в Apple, поэтому macOS пишет, что «не может проверить» приложение. Это **не** значит, что найден вирус: у macOS просто нет сведений об этом приложении.
+>
+> Весь исходный код открыт в этом репозитории, а каждую версию автоматически собирает GitHub из этого кода. Разрешить запуск нужно один раз (шаги 4–5 ниже).
 
 1. Откройте страницу **Releases** этого репозитория (ссылка справа на странице) и скачайте `Gmail Desktop.zip` из последней версии.
 2. Дважды щёлкните по ZIP-файлу и перетащите `Gmail Desktop.app` в папку **Программы** (Applications).
