@@ -82,7 +82,7 @@ The `electron/` folder contains an experimental Chromium-based alternative. It i
 
 ## Author
 
-Made by **Ivan Zakharov** · [LinkedIn](https://www.linkedin.com/in/ivan-zakharov-craftio-design/)
+Made by **Ivan Zakharov** · [LinkedIn](https://www.linkedin.com/in/ivan-zakharov-craftio-design/) · [craftio.dev@gmail.com](mailto:craftio.dev@gmail.com)
 
 ## License
 
